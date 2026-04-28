@@ -1,0 +1,18 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dashboard</title>
+    <script src="auth.js"></script>
+    <script>
+        const session = Auth.getSession();
+        if (session) {
+            window.location.replace(Auth.dashboardFor(session.role));
+        } else {
+            window.location.replace('login.html');
+        }
+    </script>
+</head>
+<body></body>
+</html>
