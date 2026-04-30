@@ -46,8 +46,7 @@ pwEl.addEventListener('input', () => {
 function setErr(id, msg) {
     const el = document.getElementById(id);
     if (el) el.textContent = msg;
-    const inputId = id.replace('Err', '');
-    const input = document.getElementById(inputId);
+    const input = document.getElementById(id.replace('Err', ''));
     if (input) {
         if (msg) input.classList.add('is-err');
         else input.classList.remove('is-err');
@@ -68,15 +67,15 @@ function getSelectedRole() {
 function validate() {
     let ok = true;
     const firstName = document.getElementById('firstName').value.trim();
-    const lastName = document.getElementById('lastName').value.trim();
-    const email = document.getElementById('email').value.trim();
-    const role = getSelectedRole();
-    const pw = pwEl.value;
-    const confirm = confirmEl.value;
-    const terms = document.getElementById('terms').checked;
+    const lastName  = document.getElementById('lastName').value.trim();
+    const email     = document.getElementById('email').value.trim();
+    const role      = getSelectedRole();
+    const pw        = pwEl.value;
+    const confirm   = confirmEl.value;
+    const terms     = document.getElementById('terms').checked;
 
     if (!firstName) { setErr('firstNameErr', 'First name is required.'); ok = false; }
-    if (!lastName)  { setErr('lastNameErr', 'Last name is required.'); ok = false; }
+    if (!lastName)  { setErr('lastNameErr',  'Last name is required.');  ok = false; }
     if (!email) {
         setErr('emailErr', 'Email is required.'); ok = false;
     } else if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
@@ -96,6 +95,28 @@ function validate() {
     if (!terms) { setErr('termsErr', 'You must agree to continue.'); ok = false; }
 
     return ok;
+}
+
+function showSuccess(firstName) {
+    form.style.display = 'none';
+    errorBox.style.display = 'none';
+
+    const successEl = document.createElement('div');
+    successEl.style.cssText = 'text-align:center; padding:32px 16px;';
+    successEl.innerHTML = `
+        <div style="font-size:52px; margin-bottom:18px;">✅</div>
+        <h2 style="font-size:22px; font-weight:600; color:#18181b; margin-bottom:8px;">Account created successfully!</h2>
+        <p style="font-size:14px; color:#71717a; margin-bottom:28px; line-height:1.6;">
+            Welcome, <strong style="color:#18181b;">${firstName}</strong>!<br>
+            Your account has been registered. Please sign in to continue.
+        </p>
+        <a href="login.html" style="
+            display:inline-block; padding:11px 32px;
+            background:#18181b; color:white; border-radius:8px;
+            font-size:14px; font-weight:600; text-decoration:none;
+        ">Go to Sign In →</a>
+    `;
+    form.parentNode.insertBefore(successEl, form);
 }
 
 form.addEventListener('submit', (e) => {
@@ -121,7 +142,6 @@ form.addEventListener('submit', (e) => {
             submitBtn.classList.remove('loading');
             return;
         }
-        Auth.login(email, password);
-        window.location.href = Auth.dashboardFor(role);
+        showSuccess(firstName);
     }, 700);
 });
